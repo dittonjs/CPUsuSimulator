@@ -146,6 +146,11 @@ function App() {
           since the last draw. This shouldn't cause issues, but all of the edge cases have not be tested yet.</li>
         </ul>
       </div>
+      <h2>Known Issues</h2>
+      <ul>
+        <li>Screen doesn't clear when CPU is reset</li>
+        <li>App crashes if you se the range on RAM and ROM too large</li>
+      </ul>
       <div>Source Code</div>
       <div><a href="https://github.com/dittonjs/CPUsuSimulator">Github</a></div>
     </div>
