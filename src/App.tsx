@@ -111,7 +111,6 @@ function App() {
         </div>
       </div>
       <div className='screen'>
-
         <canvas ref={canvasRef} className="screenElement" width={768} height={384}></canvas>
       </div>
       <div className='cpu'>
@@ -123,31 +122,32 @@ function App() {
         <Registers registers={cpu.registers} pc={cpu.programCounter}/>
       </div>
       <div className="usage">
-          <h2>Usage</h2>
-          <ul>
-            <li>Set the frequency of the CPU</li>
-            <li>Choose the ROM and RAM files to load</li>
-            <li>Click "Start" to run the program</li>
-            <li>Click "Stop" to pause the program</li>
-            <li>Click "Reset" to reset the CPU</li>
-            <li>Click "Next Instruction" to step through the program one instruction at a time</li>
-          </ul>
-          <h2>Server Mode</h2>
-          <p>Coming soon!</p>
-          <h2>Compatibility</h2>
-          <h3>Keyboard</h3>
-          <ul>
-            <li>ASCII values 0x32 - 0x96 should work the same as the logisim keyboard</li>
-            <li>The "Enter" key and arrow keys will also work</li>
-            <li>Other codes might work but milage may vary.</li>
-          </ul>
-          <h3>Screen</h3>
-          <ul>
-            <li>To improve performance, the <code>display</code> command only redraws pixes that have changed in memory
-            since the last draw. This shouldn't cause issues, but all of the edge cases have not be tested yet.</li>
-          </ul>
+        <h2>Usage</h2>
+        <ul>
+          <li>Set the frequency of the CPU</li>
+          <li>Choose the ROM and RAM files to load</li>
+          <li>Click "Start" to run the program</li>
+          <li>Click "Stop" to pause the program</li>
+          <li>Click "Reset" to reset the CPU</li>
+          <li>Click "Next Instruction" to step through the program one instruction at a time</li>
+        </ul>
+        <h2>Server Mode</h2>
+        <p>Coming soon!</p>
+        <h2>Compatibility</h2>
+        <h3>Keyboard</h3>
+        <ul>
+          <li>ASCII values 0x32 - 0x96 should work the same as the logisim keyboard</li>
+          <li>The "Enter" key and arrow keys will also work</li>
+          <li>Other codes might work but milage may vary.</li>
+        </ul>
+        <h3>Screen</h3>
+        <ul>
+          <li>To improve performance, the <code>display</code> command only redraws pixes that have changed in memory
+          since the last draw. This shouldn't cause issues, but all of the edge cases have not be tested yet.</li>
+        </ul>
       </div>
-
+      <div>Source Code</div>
+      <div><a href="https://github.com/dittonjs/CPUsuSimulator">Github</a></div>
     </div>
   )
 }
