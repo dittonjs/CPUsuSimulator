@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { CPU } from './cpu/CPU'
 import { Registers } from './Registers';
@@ -49,6 +49,33 @@ function App() {
     file?.text().then((text) => {
       cpu.loadRam(text);
     });
+  }
+  const keydown = (e: KeyboardEvent) => {
+    switch(e.key) {
+      case "ArrowUp":
+        cpu.setKeyboardValue(38);
+        break;
+      case "ArrowLeft":
+        cpu.setKeyboardValue(37);
+        break;
+      case "ArrowDown":
+        cpu.setKeyboardValue(40);
+        break;
+      case "ArrowRight":
+        cpu.setKeyboardValue(39);
+        break;
+      case "Enter":
+        cpu.setKeyboardValue(10);
+        break;
+      default:
+        cpu.setKeyboardValue(e.key.toUpperCase().charCodeAt(0));
+
+        break;
+    }
+  }
+
+  const keyup = () => {
+    cpu.setKeyboardValue(0);
   }
 
   return (
@@ -112,6 +139,7 @@ function App() {
       </div>
       <div className='screen'>
         <canvas ref={canvasRef} className="screenElement" width={768} height={384}></canvas>
+        Focus this input to use the keyboard <input type="text" value="" onKeyDown={keydown} onKeyUp={keyup} onBlur={keyup}/>
       </div>
       <div className='cpu'>
         <DataChip shouldHighlight data={cpu.rom} title="ROM (32k)" highlightIndex={cpu.programCounter} setCPUValue={(i: number, v: number) => cpu.setRomValue(i, v)}/>

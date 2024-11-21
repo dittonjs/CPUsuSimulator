@@ -20,32 +20,6 @@ export class CPU {
   public constructor() {
     // Initialize the stack pointer to the top of the stack
     this.registers[6] = 0x3FFF;
-    window.addEventListener('keydown', (e) => {
-      switch(e.key) {
-        case "ArrowUp":
-          this.keyboard[0] = 38;
-          break;
-        case "ArrowLeft":
-          this.keyboard[0] = 37;
-          break;
-        case "ArrowDown":
-          this.keyboard[0] = 40;
-          break;
-        case "ArrowRight":
-          this.keyboard[0] = 39;
-          break;
-        case "Enter":
-          this.keyboard[0] = 10;
-          break;
-        default:
-          this .keyboard[0] = e.key.toUpperCase().charCodeAt(0);
-          break;
-      }
-    });
-
-    window.addEventListener('keyup', () => {
-      this.keyboard[0] = 0;
-    });
   }
 
   public setScreenElement(screenElement: HTMLCanvasElement): void {
@@ -89,6 +63,11 @@ export class CPU {
 
   public setRamValue(index: number, value: number): void {
     this.memory[index] = value;
+    this.rerenderUI?.(); // for react
+  }
+
+  public setKeyboardValue(value: number): void {
+    this.keyboard[0] = value;
     this.rerenderUI?.(); // for react
   }
 
