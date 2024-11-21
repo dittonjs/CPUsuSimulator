@@ -1,0 +1,115 @@
+#root {
+  height: 100%;
+}
+
+.cpu {
+  display: flex;
+  flex-direction: row;
+  padding: 16px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333;
+  min-width: 128px;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: #222;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 0 2px #0006;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.registers {
+  flex: 0;
+}
+
+.reg {
+  display: flex;
+  justify-content: space-between;
+}
+
+.memory {
+  border-collapse: collapse;
+}
+
+.memory td {
+  border: 1px solid white;
+  font-size: 1rem;
+}
+
+.memory tr td:first-child {
+  background-color: #333;
+  color: white;
+  font-weight: bold;
+}
+
+.memory input {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  width: 48px;
+  font-size: 1rem;
+}
+
+.rows {
+  display: flex;
+  gap: 8px;
+}
+
+.rows input {
+  width: 48px;
+}
+
+.highlight {
+  background-color: red;
+}
+
+.controls {
+  padding: 16px;
+  display: flex;
+  align-items: flex-end;
+  background-color: rgb(16, 6, 44);
+  color: white;
+  gap: 8px;
+}
+
+.controls button {
+  padding: 8px 32px;
+}
+
+.screen {
+  margin-top: 16px;
+  display: flex;
+  padding: 16px;
+  gap: 8px;
+  justify-content: center;
+  background-color: #333;
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 0 2px #0006;
+  height: 400px;
+}
+
+.screenElement {
+  background-color: white;
+  width: 768px;
+  height: 384px;
+}
+
+.container {
+  padding: 16px;
+}
+
+.code {
+  background-color: white;
+  color: black;
+  display: flex;
+  overflow-y: auto;
+}
