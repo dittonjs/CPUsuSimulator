@@ -8,12 +8,25 @@ import { DecompiledProgram } from './DecompiledProgram';
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cpu = useMemo<CPU>(() => new CPU(), [])
-  const [toggle, setToggle] = useState<boolean>(false);
+  const [toggle, setToggle] = useState<number>(0);
   const [serverMode, setServerMode] = useState<boolean>(window.localStorage.getItem('serverMode') === 'true');
   const [hostname, setHostName] = useState<string>(window.localStorage.getItem('hostname') || 'localhost');
   const [port, setPort] = useState<string>(window.localStorage.getItem("port") || "8000");
   const [rom, setRom] = useState<string>(window.localStorage.getItem('rom') || 'program_rom.hex');
   const [ram, setRam] = useState<string>(window.localStorage.getItem('ram') || 'program_ram.hex');
+
+
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      cpu.setScreenElement(canvasRef.current!);
+    }
+  }, [cpu]);
+
+  // supplies state change callback to CPU to trigger UI update each render frame.
+  useEffect(() => {
+    cpu.setRerenderDispatcher(() => setToggle(t => t+1));
+  }, [toggle, cpu]);
 
   useEffect(() => {
     window.localStorage.setItem('serverMode', serverMode.toString());
@@ -21,19 +34,12 @@ function App() {
     window.localStorage.setItem('port', port);
     window.localStorage.setItem('rom', rom);
     window.localStorage.setItem('ram', ram);
-  }, [serverMode, port, rom, ram, hostname]);
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      cpu.setScreenElement(canvasRef.current!);
+    if (serverMode) {
+      cpu.startServerMode(hostname, port, rom, ram);
+    } else {
+      cpu.stopServerMode();
     }
-    // cpu.run();
-  }, [cpu]);
-
-  // supplies state change callback to CPU to trigger UI update each render frame.
-  useEffect(() => {
-    cpu.setRerenderDispatcher(() => setToggle(t => !t));
-  }, [toggle, cpu]);
+  }, [serverMode, port, rom, ram, hostname, cpu]);
 
   function loadRomFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.item(0);
@@ -50,6 +56,7 @@ function App() {
       cpu.loadRam(text);
     });
   }
+
   const keydown = (e: KeyboardEvent) => {
     switch(e.key) {
       case "ArrowUp":
@@ -160,7 +167,21 @@ function App() {
           <li>Click "Next Instruction" to step through the program one instruction at a time</li>
         </ul>
         <h2>Server Mode</h2>
-        <p>Coming soon!</p>
+        <p>Server mode will connect to a server and request the
+          the ROM and RAM files dynamically instead of having to reupload everytime you change your
+          program. When the app detects that the requested rom/ram files have changed, it will reset
+          the simulation and load the new files into the ROM and RAM.
+          This means you can just compile and run!
+        </p>
+        <div>
+          The server has a few requirements:
+          <ol>
+            <li>It must have cors enabled</li>
+            <li>The cache must be disabled. Otherwise it will continue to load old versions until the cache expires</li>
+          </ol>
+          If you have NodeJS installed you can run the following command to get that for free:&nbsp;
+          <code>npx http-server --cors -p 8000 -c-1</code>
+        </div>
         <h2>Compatibility</h2>
         <h3>Keyboard</h3>
         <ul>
@@ -177,7 +198,8 @@ function App() {
       <h2>Known Issues</h2>
       <ul>
         <li>Screen doesn't clear when CPU is reset</li>
-        <li>App crashes if you se the range on RAM and ROM too large</li>
+        <li>App crashes if you set the range on RAM and ROM too large</li>
+        <li>Uploading the same file multiple times in a row will not trigger UI refresh and load new values into ROM/RAM. As workaround, you can just refresh browser. Will fix soon :)</li>
       </ul>
       <div>Source Code</div>
       <div><a href="https://github.com/dittonjs/CPUsuSimulator">Github</a></div>

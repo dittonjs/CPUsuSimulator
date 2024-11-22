@@ -16,6 +16,10 @@ export class CPU {
   public frequency: number = parseInt(window.localStorage.getItem('frequency') || '8192');
   public rerenderUI: (() => void) | null = null;
   public running: boolean = false;
+  public timeout: number = 0;
+  public romFile: string = '';
+  public ramFile: string = '';
+  public serverMode: boolean = false;
 
   public constructor() {
     // Initialize the stack pointer to the top of the stack
@@ -30,7 +34,51 @@ export class CPU {
     this.rerenderUI = rerenderUI;
   }
 
+  public startServerMode(
+    host: string,
+    port: string,
+    rom: string,
+    ram: string
+  ): void {
+    this.stop();
+    this.reset();
+    this.stopServerMode(); // stop existing server mode
+    this.serverMode = true;
+    this.timeout = window.setInterval(async () => {
+      fetch(`http://${host}:${port}/${rom}?${Math.random()}`)
+        .then((response) => response.text())
+        .then((text) => {
+          if (this.serverMode && text != this.romFile) {
+            this.romFile = text;
+            this.stop();
+            this.reset();
+            this.loadRom(text);
+          }
+        }).then(() => fetch(`http://${host}:${port}/${ram}?${Math.random()}`))
+        .then((response) => response.text())
+        .then((text) => {
+          if (this.serverMode && text != this.ramFile) {
+            this.ramFile = text;
+            this.stop();
+            this.reset();
+            this.loadRam(text);
+          }
+        })
+        .catch(() => {});
+      this.rerenderUI?.();
+    }, 1000);
+  }
+
+  public stopServerMode() {
+    this.serverMode = false;
+    this.reset();
+    this.romFile = '';
+    this.ramFile = '';
+    window.clearInterval(this.timeout);
+  }
+
   public loadRom(fileText: string): void {
+    this.rom.fill(0);
     const lines = fileText.split('\n');
     const words = lines[1].replace(/00: /g, '').split(' ').map((b) => parseInt(b, 16));
     if (words.length > this.rom.length) {
@@ -44,6 +92,7 @@ export class CPU {
   }
 
   public loadRam(fileText: string): void {
+    this.memory.fill(0);
     const lines = fileText.split('\n');
     const words = lines[1].replace(/00: /g, '').split(' ').map((b) => parseInt(b, 16));
     if (words.length > this.memory.length) {

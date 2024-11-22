@@ -5,15 +5,14 @@ type DataChipProps = {
   title: string,
   highlightIndex: number,
   setCPUValue: (index: number, value: number) => void,
-  shouldHighlight?: boolean
+  shouldHighlight?: boolean,
 }
 
-export const DataChip = ({data, title, highlightIndex, setCPUValue, shouldHighlight = false}: DataChipProps): ReactElement => {
+export const DataChip = ({ data, title, highlightIndex, setCPUValue, shouldHighlight = false}: DataChipProps): ReactElement => {
   const [rowsStart, setRowsStart] = useState<number>(0);
   const [rowsEnd, setRowsEnd] = useState<number>(100);
   const [editingIndex, setEditingIndex] = useState<number>(-1);
   const elements = new Array<ReactElement | null>(Math.floor(data.length / 4)).fill(null);
-
   function setValueInCPU(value: string) {
     if(editingIndex === -1) {
       return;
